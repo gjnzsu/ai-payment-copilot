@@ -5,8 +5,17 @@ import re
 from payment_copilot.mock_data import RULE_KNOWLEDGE
 from payment_copilot.models import PaymentCase, RuleKnowledge
 
+CLASSIFICATION_RULES = {
+    "MISSING_CREDITOR_ACCOUNT": {"RULE-PACS008-CDTR-ACCT"},
+    "INVALID_CREDITOR_AGENT_BIC": {"RULE-PACS008-CDTR-AGT-BIC"},
+}
 
-def retrieve_rule_knowledge(case: PaymentCase, limit: int = 3) -> list[RuleKnowledge]:
+
+def retrieve_rule_knowledge(
+    case: PaymentCase,
+    limit: int = 3,
+    classification_code: str | None = None,
+) -> list[RuleKnowledge]:
     query_terms = _terms(
         " ".join(
             [
@@ -19,12 +28,24 @@ def retrieve_rule_knowledge(case: PaymentCase, limit: int = 3) -> list[RuleKnowl
         )
     )
 
+    candidate_rules = _candidate_rules(classification_code)
     ranked = sorted(
-        RULE_KNOWLEDGE,
+        candidate_rules,
         key=lambda rule: _score(rule, query_terms),
         reverse=True,
     )
     return [rule for rule in ranked if _score(rule, query_terms) > 0][:limit]
+
+
+def _candidate_rules(classification_code: str | None) -> list[RuleKnowledge]:
+    if not classification_code:
+        return list(RULE_KNOWLEDGE)
+
+    allowed_rule_ids = CLASSIFICATION_RULES.get(classification_code)
+    if not allowed_rule_ids:
+        return list(RULE_KNOWLEDGE)
+
+    return [rule for rule in RULE_KNOWLEDGE if rule.rule_id in allowed_rule_ids]
 
 
 def _terms(text: str) -> set[str]:

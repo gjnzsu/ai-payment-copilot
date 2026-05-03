@@ -15,7 +15,7 @@ from payment_copilot.tools import query_payment_logs
 
 def investigate_payment(case: PaymentCase) -> Diagnosis:
     classification = classify_exception(case)
-    rules = retrieve_rule_knowledge(case, limit=2)
+    rules = retrieve_rule_knowledge(case, limit=2, classification_code=classification.code)
     logs = query_payment_logs(case.payment_id)
     evidence = _build_evidence(rules, logs)
     root_cause = _root_cause(classification.code)

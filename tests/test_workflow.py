@@ -29,3 +29,13 @@ def test_workflow_uses_deterministic_explanation_when_llm_is_not_configured(monk
 
     assert diagnosis.explanation_source == "Deterministic"
     assert "evidence item" in diagnosis.explanation
+
+
+def test_workflow_only_uses_rule_evidence_relevant_to_classification():
+    diagnosis = investigate_payment(get_case("CASE-001"))
+
+    rule_references = [
+        item.reference for item in diagnosis.evidence if item.source == "Rule Knowledge"
+    ]
+
+    assert rule_references == ["RULE-PACS008-CDTR-ACCT"]
