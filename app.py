@@ -19,12 +19,17 @@ st.set_page_config(
 def main() -> None:
     cases = list_cases()
     draft_payments = list_draft_payments()
+    exception_cases = [case for case in cases if case.case_id.startswith("CASE-")]
+    draft_cases = [
+        case for case in draft_payments if case.case_id.startswith("DRAFT-")
+    ]
     case_by_label = {
-        f"{case.case_id} - {case.status} - {case.creditor_name}": case for case in cases
+        f"{case.case_id} - {case.status} - {case.creditor_name}": case
+        for case in exception_cases
     }
     draft_by_label = {
         f"{case.case_id} - {case.message_type} - {case.creditor_name}": case
-        for case in draft_payments
+        for case in draft_cases
     }
 
     st.title("AI Payment Copilot")
@@ -35,16 +40,6 @@ def main() -> None:
 
     with st.sidebar:
         st.header("Demo Data")
-        selected_draft_label = st.radio(
-            "Draft payments",
-            options=list(draft_by_label.keys()),
-        )
-        st.divider()
-        selected_case_label = st.radio(
-            "Payment exceptions",
-            options=list(case_by_label.keys()),
-        )
-        st.divider()
         st.caption("PoC mode")
         st.write("Mock data only")
         st.write("Deterministic pre-validation, rail advice, and diagnosis")
@@ -53,18 +48,31 @@ def main() -> None:
         else:
             st.write("LLM polishing inactive")
 
-    prevalidation_tab, rail_tab, investigation_tab = st.tabs(
-        ["Pre-Validation", "Rail Recommendation", "Exception Investigation"]
+    draft_workflow_tab, exception_workflow_tab = st.tabs(
+        ["Draft Payment Workflow", "Payment Exception Workflow"]
     )
 
-    with prevalidation_tab:
-        _render_prevalidation(draft_by_label[selected_draft_label])
+    with draft_workflow_tab:
+        st.caption("Use this workflow before payment submission.")
+        selected_draft_label = st.selectbox(
+            "Draft payment",
+            options=list(draft_by_label.keys()),
+            key="draft_payment_selector",
+        )
+        selected_draft = draft_by_label[selected_draft_label]
+        _render_prevalidation(selected_draft)
+        st.divider()
+        _render_rail_recommendation(selected_draft)
 
-    with rail_tab:
-        _render_rail_recommendation(draft_by_label[selected_draft_label])
-
-    with investigation_tab:
-        _render_investigation(case_by_label[selected_case_label])
+    with exception_workflow_tab:
+        st.caption("Use this workflow after a payment is rejected or failed.")
+        selected_case_label = st.selectbox(
+            "Payment exception",
+            options=list(case_by_label.keys()),
+            key="payment_exception_selector",
+        )
+        selected_case = case_by_label[selected_case_label]
+        _render_investigation(selected_case)
 
 
 def _payment_rows(case: PaymentCase) -> list[dict[str, str]]:
@@ -166,6 +174,11 @@ def _render_rail_recommendation(case: PaymentCase) -> None:
 
 def _render_investigation(case: PaymentCase) -> None:
     diagnosis = investigate_payment(case)
+
+    st.caption(
+        "Separate post-failure workflow: this exception case is selected independently "
+        "from the draft payment used for pre-validation and rail recommendation."
+    )
 
     top_left, top_right = st.columns([2, 1])
     with top_left:
