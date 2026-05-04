@@ -30,6 +30,32 @@ rejected payments.
 - Rule scope is limited to missing creditor account and invalid creditor agent BIC.
 - Rail recommendation is mock-data only and compares Wire, RTP, ACH, SEPA, and SWIFT.
 
+## Product and Architecture Docs
+
+- [AI use case PRD](docs/ai-payment-copilot-ai-use-case-prd.md): product framing,
+  AI user stories, input/output contracts, acceptance criteria, evaluation metrics,
+  non-functional requirements, dependencies, and guardrails.
+- [GKE architecture diagram](docs/ai-payment-copilot-gke-architecture.drawio):
+  editable draw.io diagram for a production deployment with UI, backend API,
+  shared `ai-gateway-service`, `ai-rag-service`, and `ai-sre-observability`.
+
+## Production Direction
+
+The intended production path is a GKE deployment that separates the current
+Streamlit PoC into an internal UI and backend API layer. Production integration
+should replace mock data with payment hub, bank reference data, rail configuration,
+operational logs, case management, and compliance systems.
+
+Shared cluster services are expected to provide:
+
+- `ai-gateway-service` for governed LLM/model access.
+- `ai-rag-service` for governed rules, policy, runbook, and payment knowledge retrieval.
+- `ai-sre-observability` for logs, traces, metrics, health, and alerting.
+
+The initial production pilot should remain read-only and human-in-the-loop:
+recommendations are displayed, explained, and audited, but payment repair,
+resubmission, rail execution, and compliance decisions require analyst approval.
+
 ## Run
 
 ```powershell

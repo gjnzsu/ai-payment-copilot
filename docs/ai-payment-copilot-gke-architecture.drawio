@@ -1,0 +1,169 @@
+<mxfile host="app.diagrams.net" modified="2026-05-04T00:00:00.000Z" agent="Codex" version="24.7.17">
+  <diagram id="ai-payment-copilot-gke-architecture" name="GKE Architecture">
+    <mxGraphModel dx="1800" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0" adaptiveColors="auto">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title" value="AI Payment Copilot Production Architecture on GKE" style="text;html=1;strokeColor=none;fillColor=none;fontSize=24;fontStyle=1;fontColor=#1F2937;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="720" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="UI layer, backend API layer, shared model/RAG/observability services, and enterprise payment integrations" style="text;html=1;strokeColor=none;fillColor=none;fontSize=13;fontColor=#4B5563;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="58" width="860" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="user-layer" value="User / Operations Layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#94A3B8;strokeWidth=2;fontStyle=1;fontColor=#0F172A;align=center;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="120" width="210" height="690" as="geometry"/>
+        </mxCell>
+        <mxCell id="gke-boundary" value="GKE Cluster" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEF6FF;strokeColor=#2563EB;strokeWidth=2;fontStyle=1;fontSize=16;fontColor=#1E3A8A;align=center;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="290" y="110" width="930" height="720" as="geometry"/>
+        </mxCell>
+        <mxCell id="external-layer" value="External / Enterprise Systems" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#F97316;strokeWidth=2;fontStyle=1;fontColor=#7C2D12;align=center;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="120" width="300" height="690" as="geometry"/>
+        </mxCell>
+        <mxCell id="app-namespace" value="Application Namespace" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#60A5FA;strokeWidth=1;dashed=1;fontStyle=1;fontColor=#1D4ED8;align=center;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="320" y="160" width="540" height="610" as="geometry"/>
+        </mxCell>
+        <mxCell id="shared-services" value="Shared AI Services Namespace" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F3FF;strokeColor=#7C3AED;strokeWidth=1;dashed=1;fontStyle=1;fontColor=#4C1D95;align=center;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="890" y="160" width="300" height="610" as="geometry"/>
+        </mxCell>
+        <mxCell id="ops-user" value="Payment Operations User" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#F8FAFC;strokeColor=#334155;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="98" y="210" width="80" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="browser" value="Internal Browser&#xa;Operations Workspace" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2FE;strokeColor=#0284C7;fontColor=#0C4A6E;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="390" width="150" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="ingress" value="Internal Ingress / Gateway&#xa;Private access only" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontColor=#1E3A8A;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="210" width="180" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="auth" value="Auth / RBAC Boundary&#xa;SSO, roles, audit identity" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;fontColor=#78350F;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="330" width="180" height="78" as="geometry"/>
+        </mxCell>
+        <mxCell id="ui" value="ai-payment-copilot-ui&#xa;Internal web UI&#xa;Pre-validation, rail advice, investigation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D1FAE5;strokeColor=#059669;fontColor=#064E3B;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="460" width="180" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="api" value="ai-payment-copilot-api&#xa;Backend API Layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDE9FE;strokeColor=#7C3AED;fontColor=#4C1D95;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="610" y="220" width="200" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="prevalidation" value="Pre-validation Service&#xa;ISO 20022 field checks&#xa;Reference-data validation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#8B5CF6;fontColor=#312E81;" vertex="1" parent="1">
+          <mxGeometry x="610" y="330" width="200" height="76" as="geometry"/>
+        </mxCell>
+        <mxCell id="repair" value="Repair Recommendation&#xa;Suggest-only actions&#xa;Evidence-backed guidance" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#8B5CF6;fontColor=#312E81;" vertex="1" parent="1">
+          <mxGeometry x="610" y="430" width="200" height="76" as="geometry"/>
+        </mxCell>
+        <mxCell id="rail" value="Rail Recommendation&#xa;Wire, RTP, ACH, SEPA, SWIFT&#xa;Cost, speed, limit, cutoff fit" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#8B5CF6;fontColor=#312E81;" vertex="1" parent="1">
+          <mxGeometry x="610" y="530" width="200" height="88" as="geometry"/>
+        </mxCell>
+        <mxCell id="investigation" value="Exception Investigation&#xa;Root cause, timeline, next action" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#8B5CF6;fontColor=#312E81;" vertex="1" parent="1">
+          <mxGeometry x="610" y="650" width="200" height="76" as="geometry"/>
+        </mxCell>
+        <mxCell id="audit" value="Audit / Event Logging&#xa;Recommendation ID, payment ID, user ID, trace ID" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#DC2626;fontColor=#7F1D1D;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="630" width="180" height="88" as="geometry"/>
+        </mxCell>
+        <mxCell id="gateway" value="ai-gateway-service&#xa;Central LLM / model access&#xa;No direct OpenAI SDK from app" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DDD6FE;strokeColor=#7C3AED;fontColor=#4C1D95;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="930" y="230" width="220" height="92" as="geometry"/>
+        </mxCell>
+        <mxCell id="rag" value="ai-rag-service&#xa;Rules, scheme guidance, policy docs, runbooks" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DDD6FE;strokeColor=#7C3AED;fontColor=#4C1D95;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="930" y="390" width="220" height="86" as="geometry"/>
+        </mxCell>
+        <mxCell id="observability" value="ai-sre-observability&#xa;Logs, traces, metrics, health, alerts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CCFBF1;strokeColor=#0D9488;fontColor=#134E4A;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="930" y="590" width="220" height="92" as="geometry"/>
+        </mxCell>
+        <mxCell id="payment-hub" value="Payment Hub / Orchestration&#xa;Draft and failed payments" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEDD5;strokeColor=#EA580C;fontColor=#7C2D12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="180" width="220" height="74" as="geometry"/>
+        </mxCell>
+        <mxCell id="reference-data" value="Bank Reference Data&#xa;BIC, account, participant reachability" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEDD5;strokeColor=#EA580C;fontColor=#7C2D12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="280" width="220" height="74" as="geometry"/>
+        </mxCell>
+        <mxCell id="rail-config" value="Rail Config and Cutoffs&#xa;Limits, fees, SLA, availability" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEDD5;strokeColor=#EA580C;fontColor=#7C2D12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="380" width="220" height="74" as="geometry"/>
+        </mxCell>
+        <mxCell id="ops-logs" value="Operational Logs&#xa;Validator, directory, orchestrator events" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEDD5;strokeColor=#EA580C;fontColor=#7C2D12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="480" width="220" height="74" as="geometry"/>
+        </mxCell>
+        <mxCell id="case-mgmt" value="Case Management&#xa;Repair queue and analyst workflow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEDD5;strokeColor=#EA580C;fontColor=#7C2D12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="580" width="220" height="74" as="geometry"/>
+        </mxCell>
+        <mxCell id="compliance" value="Compliance / Sanctions&#xa;Screening and control decisions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEDD5;strokeColor=#EA580C;fontColor=#7C2D12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="680" width="220" height="74" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend1" value="Solid arrows: request / recommendation flow" style="text;html=1;strokeColor=none;fillColor=none;fontSize=12;fontColor=#374151;align=left;verticalAlign=middle;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="40" y="850" width="280" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend2" value="Dashed arrows: telemetry / audit flow" style="text;html=1;strokeColor=none;fillColor=none;fontSize=12;fontColor=#374151;align=left;verticalAlign=middle;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="40" y="875" width="260" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-user-browser" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#334155;strokeWidth=2;" edge="1" parent="1" source="ops-user" target="browser">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-browser-ingress" value="HTTPS internal access" style="endArrow=block;html=1;rounded=0;strokeColor=#2563EB;strokeWidth=2;" edge="1" parent="1" source="browser" target="ingress">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-ingress-auth" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#2563EB;strokeWidth=2;" edge="1" parent="1" source="ingress" target="auth">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-auth-ui" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#059669;strokeWidth=2;" edge="1" parent="1" source="auth" target="ui">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-ui-api" value="API calls" style="endArrow=block;html=1;rounded=0;strokeColor=#7C3AED;strokeWidth=2;" edge="1" parent="1" source="ui" target="api">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-api-prevalidation" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#7C3AED;strokeWidth=2;" edge="1" parent="1" source="api" target="prevalidation">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-api-repair" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#7C3AED;strokeWidth=2;" edge="1" parent="1" source="api" target="repair">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-api-rail" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#7C3AED;strokeWidth=2;" edge="1" parent="1" source="api" target="rail">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-api-investigation" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#7C3AED;strokeWidth=2;" edge="1" parent="1" source="api" target="investigation">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-api-gateway" value="LLM narrative and summarization" style="endArrow=block;html=1;rounded=0;strokeColor=#7C3AED;strokeWidth=2;" edge="1" parent="1" source="api" target="gateway">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-api-rag" value="Evidence and rules retrieval" style="endArrow=block;html=1;rounded=0;strokeColor=#7C3AED;strokeWidth=2;" edge="1" parent="1" source="api" target="rag">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-api-audit" value="decision events" style="endArrow=block;html=1;rounded=0;strokeColor=#DC2626;strokeWidth=2;" edge="1" parent="1" source="api" target="audit">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-api-payment-hub" value="payments, status, callbacks" style="endArrow=block;html=1;rounded=0;strokeColor=#EA580C;strokeWidth=2;" edge="1" parent="1" source="api" target="payment-hub">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-prevalidation-reference" value="BIC/account checks" style="endArrow=block;html=1;rounded=0;strokeColor=#EA580C;strokeWidth=2;" edge="1" parent="1" source="prevalidation" target="reference-data">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-rail-config" value="limits, fees, cutoffs" style="endArrow=block;html=1;rounded=0;strokeColor=#EA580C;strokeWidth=2;" edge="1" parent="1" source="rail" target="rail-config">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-investigation-logs" value="operational evidence" style="endArrow=block;html=1;rounded=0;strokeColor=#EA580C;strokeWidth=2;" edge="1" parent="1" source="investigation" target="ops-logs">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-repair-case" value="repair workflow" style="endArrow=block;html=1;rounded=0;strokeColor=#EA580C;strokeWidth=2;" edge="1" parent="1" source="repair" target="case-mgmt">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-api-compliance" value="control context" style="endArrow=block;html=1;rounded=0;strokeColor=#EA580C;strokeWidth=2;" edge="1" parent="1" source="api" target="compliance">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-rag-external" value="governed knowledge sources" style="endArrow=block;html=1;rounded=0;strokeColor=#EA580C;strokeWidth=2;" edge="1" parent="1" source="rag" target="compliance">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-ui-obs" value="UI telemetry" style="endArrow=block;html=1;rounded=0;strokeColor=#0D9488;strokeWidth=2;dashed=1;" edge="1" parent="1" source="ui" target="observability">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-api-obs" value="API logs, traces, metrics" style="endArrow=block;html=1;rounded=0;strokeColor=#0D9488;strokeWidth=2;dashed=1;" edge="1" parent="1" source="api" target="observability">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-gateway-obs" value="model telemetry" style="endArrow=block;html=1;rounded=0;strokeColor=#0D9488;strokeWidth=2;dashed=1;" edge="1" parent="1" source="gateway" target="observability">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-rag-obs" value="retrieval telemetry" style="endArrow=block;html=1;rounded=0;strokeColor=#0D9488;strokeWidth=2;dashed=1;" edge="1" parent="1" source="rag" target="observability">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge-audit-obs" value="audit trail monitoring" style="endArrow=block;html=1;rounded=0;strokeColor=#0D9488;strokeWidth=2;dashed=1;" edge="1" parent="1" source="audit" target="observability">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
