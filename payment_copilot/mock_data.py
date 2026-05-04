@@ -34,6 +34,43 @@ PAYMENT_CASES: tuple[PaymentCase, ...] = (
 )
 
 
+DRAFT_PAYMENTS: tuple[PaymentCase, ...] = (
+    PaymentCase(
+        case_id="DRAFT-001",
+        payment_id="PMT-DRAFT-0001",
+        message_type="pacs.008",
+        status="Draft",
+        amount="USD 125,000.00",
+        debtor_name="Northstar Trading LLC",
+        debtor_agent_bic="BOFAUS3NXXX",
+        creditor_name="Alpine Components AG",
+        creditor_agent_bic="DEUTDEFFXXX",
+        creditor_account=None,
+        raw_exception="Draft pacs.008 pending pre-submit validation.",
+        submitted_at="Not submitted",
+    ),
+    PaymentCase(
+        case_id="DRAFT-002",
+        payment_id="PMT-DRAFT-0002",
+        message_type="pacs.008",
+        status="Draft",
+        amount="EUR 42,700.00",
+        debtor_name="Harbor Medical Supplies",
+        debtor_agent_bic="CHASUS33XXX",
+        creditor_name="Novara Pharma SRL",
+        creditor_agent_bic="ZZZZDE00XXX",
+        creditor_account="DE89370400440532013000",
+        raw_exception="Draft pacs.008 pending pre-submit validation.",
+        submitted_at="Not submitted",
+    ),
+)
+
+
+ACTIVE_CREDITOR_AGENT_BICS: tuple[str, ...] = (
+    "DEUTDEFFXXX",
+)
+
+
 RULE_KNOWLEDGE: tuple[RuleKnowledge, ...] = (
     RuleKnowledge(
         rule_id="RULE-PACS008-CDTR-ACCT",
@@ -94,8 +131,19 @@ def list_cases() -> list[PaymentCase]:
     return list(PAYMENT_CASES)
 
 
+def list_draft_payments() -> list[PaymentCase]:
+    return list(DRAFT_PAYMENTS)
+
+
 def get_case(case_id: str) -> PaymentCase:
     for case in PAYMENT_CASES:
         if case.case_id == case_id:
             return case
     raise KeyError(f"Unknown case id: {case_id}")
+
+
+def get_draft_payment(case_id: str) -> PaymentCase:
+    for case in DRAFT_PAYMENTS:
+        if case.case_id == case_id:
+            return case
+    raise KeyError(f"Unknown draft payment id: {case_id}")

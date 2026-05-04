@@ -66,6 +66,23 @@ class InvestigationStep:
 
 
 @dataclass(frozen=True)
+class ValidationIssue:
+    code: str
+    severity: str
+    field_path: str
+    explanation: str
+    repair_suggestion: str
+
+
+@dataclass(frozen=True)
+class PreValidationResult:
+    case: PaymentCase
+    status: str
+    issues: list[ValidationIssue]
+    evidence: list[Evidence]
+
+
+@dataclass(frozen=True)
 class Diagnosis:
     case: PaymentCase
     classification: Classification

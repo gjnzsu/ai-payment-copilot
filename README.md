@@ -1,10 +1,12 @@
 # AI Payment Copilot PoC
 
-A greenfield Streamlit prototype for payment operations teams investigating failed or
-rejected `pacs.008` payments.
+A greenfield Streamlit prototype for payment operations teams pre-validating draft
+`pacs.008` payments and investigating failed or rejected payments.
 
 ## What It Shows
 
+- A pre-submit validation workspace for draft `pacs.008` payments.
+- Suggest-only repair recommendations for predicted validation and routing defects.
 - A payment investigation workspace with two mock exception cases.
 - Deterministic validation and exception classification.
 - Lightweight rule knowledge retrieval over mock payment rules.
@@ -13,8 +15,16 @@ rejected `pacs.008` payments.
 
 ## Demo Cases
 
+- `DRAFT-001`: draft `pacs.008` would fail because creditor account is missing.
+- `DRAFT-002`: draft `pacs.008` would fail because creditor agent BIC is invalid.
 - `CASE-001`: `pacs.008` rejected because creditor account is missing.
 - `CASE-002`: `pacs.008` failed because creditor agent BIC is invalid.
+
+## PoC Scope
+
+- Pre-validation is shown in a dedicated Streamlit tab beside exception investigation.
+- Repair is suggest-only; the PoC does not mutate or auto-repair draft payments.
+- Rule scope is limited to missing creditor account and invalid creditor agent BIC.
 
 ## Run
 
