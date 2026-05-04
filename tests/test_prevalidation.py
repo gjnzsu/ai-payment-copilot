@@ -32,3 +32,11 @@ def test_prevalidation_evidence_only_includes_rule_relevant_to_detected_issue():
     ]
 
     assert rule_references == ["RULE-PACS008-CDTR-ACCT"]
+
+
+def test_valid_draft_is_ready_for_submission():
+    result = prevalidate_payment(get_draft_payment("DRAFT-003"))
+
+    assert result.status == "Ready"
+    assert result.issues == []
+    assert result.evidence == []

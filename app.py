@@ -7,6 +7,7 @@ import streamlit as st
 from payment_copilot.mock_data import list_cases, list_draft_payments
 from payment_copilot.models import PaymentCase
 from payment_copilot.prevalidation import prevalidate_payment
+from payment_copilot.rail_recommendation import recommend_payment_rails
 from payment_copilot.workflow import investigate_payment
 
 st.set_page_config(
@@ -28,7 +29,8 @@ def main() -> None:
 
     st.title("AI Payment Copilot")
     st.caption(
-        "PoC workspace for pre-validating draft pacs.008 payments and investigating exceptions."
+        "PoC workspace for pre-validating draft pacs.008 payments, recommending rails, "
+        "and investigating exceptions."
     )
 
     with st.sidebar:
@@ -45,18 +47,21 @@ def main() -> None:
         st.divider()
         st.caption("PoC mode")
         st.write("Mock data only")
-        st.write("Deterministic pre-validation and diagnosis")
+        st.write("Deterministic pre-validation, rail advice, and diagnosis")
         if os.getenv("OPENAI_API_KEY"):
             st.write("LLM polishing available")
         else:
             st.write("LLM polishing inactive")
 
-    prevalidation_tab, investigation_tab = st.tabs(
-        ["Pre-Validation", "Exception Investigation"]
+    prevalidation_tab, rail_tab, investigation_tab = st.tabs(
+        ["Pre-Validation", "Rail Recommendation", "Exception Investigation"]
     )
 
     with prevalidation_tab:
         _render_prevalidation(draft_by_label[selected_draft_label])
+
+    with rail_tab:
+        _render_rail_recommendation(draft_by_label[selected_draft_label])
 
     with investigation_tab:
         _render_investigation(case_by_label[selected_case_label])
@@ -87,7 +92,7 @@ def _render_prevalidation(case: PaymentCase) -> None:
         st.dataframe(
             _payment_rows(case),
             hide_index=True,
-            use_container_width=True,
+            width="stretch",
         )
     with top_right:
         st.metric("Validation Status", result.status)
@@ -97,17 +102,66 @@ def _render_prevalidation(case: PaymentCase) -> None:
             st.metric("Detected Issues", 0)
 
     st.markdown("### Repair Recommendations")
-    for issue in result.issues:
-        with st.container(border=True):
-            st.caption(f"{issue.code} - {issue.severity} - {issue.field_path}")
-            st.write(issue.explanation)
-            st.success(issue.repair_suggestion)
+    if result.issues:
+        for issue in result.issues:
+            with st.container(border=True):
+                st.caption(f"{issue.code} - {issue.severity} - {issue.field_path}")
+                st.write(issue.explanation)
+                st.success(issue.repair_suggestion)
+    else:
+        st.success("No validation defects detected. This draft is ready for rail selection.")
 
     st.markdown("### Supporting Rule Evidence")
-    for item in result.evidence:
-        with st.container(border=True):
-            st.caption(f"{item.source} - {item.reference}")
-            st.write(item.detail)
+    if result.evidence:
+        for item in result.evidence:
+            with st.container(border=True):
+                st.caption(f"{item.source} - {item.reference}")
+                st.write(item.detail)
+    else:
+        st.caption("No repair rule evidence needed for a ready draft.")
+
+
+def _render_rail_recommendation(case: PaymentCase) -> None:
+    result = recommend_payment_rails(case)
+
+    st.subheader(f"{case.case_id}: Rail Recommendation")
+    st.write(result.summary)
+
+    if result.status == "Blocked":
+        st.warning("Resolve pre-validation repair items before selecting a payment rail.")
+        return
+
+    top = result.recommendations[0]
+    top_left, top_right = st.columns([2, 1])
+    with top_left:
+        st.markdown("### Recommended Rail")
+        st.success(f"{top.name}: {top.rationale}")
+    with top_right:
+        st.metric("Top Score", top.score)
+        st.metric("Settlement", top.settlement_time)
+
+    st.markdown("### Rail Ranking")
+    st.dataframe(
+        [
+            {
+                "Rail": option.name,
+                "Eligible": "Yes" if option.eligible else "No",
+                "Score": option.score,
+                "Fee": option.fee,
+                "Settlement": option.settlement_time,
+                "Rationale": option.rationale,
+            }
+            for option in result.recommendations
+        ],
+        hide_index=True,
+        width="stretch",
+    )
+
+    st.markdown("### Decision Factors")
+    for option in result.recommendations:
+        with st.expander(f"{option.name} - {'Eligible' if option.eligible else 'Not eligible'}"):
+            for reason in option.reasons:
+                st.write(reason)
 
 
 def _render_investigation(case: PaymentCase) -> None:
@@ -127,7 +181,7 @@ def _render_investigation(case: PaymentCase) -> None:
         st.dataframe(
             _payment_rows(case),
             hide_index=True,
-            use_container_width=True,
+            width="stretch",
         )
 
     with diagnosis_col:

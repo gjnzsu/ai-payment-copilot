@@ -83,6 +83,26 @@ class PreValidationResult:
 
 
 @dataclass(frozen=True)
+class RailRecommendation:
+    rail_id: str
+    name: str
+    eligible: bool
+    score: int
+    fee: str
+    settlement_time: str
+    rationale: str
+    reasons: list[str]
+
+
+@dataclass(frozen=True)
+class RailRecommendationResult:
+    case: PaymentCase
+    status: str
+    summary: str
+    recommendations: list[RailRecommendation]
+
+
+@dataclass(frozen=True)
 class Diagnosis:
     case: PaymentCase
     classification: Classification

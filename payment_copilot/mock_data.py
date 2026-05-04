@@ -63,11 +63,26 @@ DRAFT_PAYMENTS: tuple[PaymentCase, ...] = (
         raw_exception="Draft pacs.008 pending pre-submit validation.",
         submitted_at="Not submitted",
     ),
+    PaymentCase(
+        case_id="DRAFT-003",
+        payment_id="PMT-DRAFT-0003",
+        message_type="pacs.008",
+        status="Draft",
+        amount="USD 250,000.00",
+        debtor_name="Northstar Trading LLC",
+        debtor_agent_bic="BOFAUS3NXXX",
+        creditor_name="Harbor Medical Supplies",
+        creditor_agent_bic="CHASUS33XXX",
+        creditor_account="US123456789000111222333",
+        raw_exception="Draft pacs.008 ready for rail recommendation.",
+        submitted_at="Not submitted",
+    ),
 )
 
 
 ACTIVE_CREDITOR_AGENT_BICS: tuple[str, ...] = (
     "DEUTDEFFXXX",
+    "CHASUS33XXX",
 )
 
 
