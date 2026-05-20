@@ -4,6 +4,8 @@ A greenfield Streamlit prototype for payment operations teams pre-validating dra
 `pacs.008` payments, recommending payment rails, and investigating failed or
 rejected payments.
 
+![AI Payment Copilot PoC screen](docs/assets/ai-payment-copilot-poc.png)
+
 ## What It Shows
 
 - A pre-submit validation workspace for draft `pacs.008` payments.
