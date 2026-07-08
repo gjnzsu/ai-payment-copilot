@@ -1,0 +1,82 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.6 Chrome/144.0.7559.236 Electron/40.8.4 Safari/537.36" version="29.6.6">
+  <diagram id="ai-payment-copilot-current-vs-target" name="Current PoC vs Target Architecture">
+    <mxGraphModel dx="1389" dy="845" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1450" pageHeight="900" math="0" shadow="0" adaptiveColors="auto">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;fontSize=24;fontStyle=1;fontColor=#1F2937;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" value="AI Payment Copilot - Current PoC vs Target Architecture" vertex="1">
+          <mxGeometry height="36" width="820" x="40" y="24" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" parent="1" style="text;html=1;strokeColor=none;fillColor=none;fontSize=13;fontColor=#4B5563;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" value="What is implemented today, and how it maps to the future production service architecture" vertex="1">
+          <mxGeometry height="26" width="820" x="40" y="58" as="geometry" />
+        </mxCell>
+        <mxCell id="current-boundary" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFDF5;strokeColor=#10B981;strokeWidth=2;fontStyle=1;fontSize=16;fontColor=#064E3B;align=center;verticalAlign=top;spacingTop=12;" value="Current PoC - Implemented Today" vertex="1">
+          <mxGeometry height="640" width="535" x="55" y="115" as="geometry" />
+        </mxCell>
+        <mxCell id="target-boundary" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=2;fontStyle=1;fontSize=16;fontColor=#1E3A8A;align=center;verticalAlign=top;spacingTop=12;dashed=1;" value="Future Target Architecture" vertex="1">
+          <mxGeometry height="640" width="525" x="855" y="115" as="geometry" />
+        </mxCell>
+        <mxCell id="current-ui" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=1.5;fontStyle=1;" value="Streamlit PoC App&#xa;app.py&#xa;Two analyst workflows" vertex="1">
+          <mxGeometry height="92" width="230" x="210" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="current-modules" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=1.5;fontStyle=1;" value="Local Workflow Modules" vertex="1">
+          <mxGeometry height="120" width="270" x="190" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="current-rag" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#F59E0B;strokeWidth=1.5;fontStyle=1;fontColor=#78350F;" value="Local Rule Retrieval&lt;br&gt;&lt;br&gt;Mock rule knowledge" vertex="1">
+          <mxGeometry height="90" width="205" x="105" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="current-data" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#F59E0B;strokeWidth=1.5;fontStyle=1;fontColor=#78350F;" value="Mock Data Layer&lt;br&gt;&lt;br&gt;Drafts, cases, logs, BICs" vertex="1">
+          <mxGeometry height="90" width="205" x="340" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="current-llm" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=1.5;fontStyle=1;" value="Optional OpenAI SDK Call&lt;div&gt;&lt;br&gt;Explanation polishing only&lt;/div&gt;" vertex="1">
+          <mxGeometry height="88" width="230" x="210" y="635" as="geometry" />
+        </mxCell>
+        <mxCell id="target-ui" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=1.5;fontStyle=1;fontColor=#1E3A8A;dashed=1;" value="ai-payment-copilot-ui&#xa;Internal web UI&#xa;Auth-aware analyst workspace" vertex="1">
+          <mxGeometry height="92" width="230" x="1005" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="target-api" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=1.5;fontStyle=1;fontColor=#1E3A8A;dashed=1;" value="ai-payment-copilot-api&#xa;Backend API + orchestration&#xa;Audit + policy enforcement" vertex="1">
+          <mxGeometry height="105" width="230" x="1005" y="315" as="geometry" />
+        </mxCell>
+        <mxCell id="target-ai" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDE9FE;strokeColor=#7C3AED;strokeWidth=1.5;fontStyle=1;fontColor=#4C1D95;dashed=1;" value="Shared AI Services&#xa;ai-gateway-service&#xa;ai-rag-service&#xa;ai-sre-observability" vertex="1">
+          <mxGeometry height="112" width="230" x="870" y="495" as="geometry" />
+        </mxCell>
+        <mxCell id="target-enterprise" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#64748B;strokeWidth=1.5;fontStyle=1;fontColor=#0F172A;dashed=1;" value="Enterprise Payment Systems&#xa;Payment hub + pacs.008 data&#xa;Reference data + rail config&#xa;Ops logs + case workflow" vertex="1">
+          <mxGeometry height="112" width="200" x="1150" y="495" as="geometry" />
+        </mxCell>
+        <mxCell id="target-deploy" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#64748B;strokeWidth=1.5;fontStyle=1;fontColor=#334155;dashed=1;" value="GKE Production Deployment&#xa;Separate services&#xa;RBAC, secrets, telemetry&#xa;Human-in-the-loop controls" vertex="1">
+          <mxGeometry height="92" width="230" x="1005" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="bridge" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#64748B;strokeWidth=1.5;fontStyle=1;fontColor=#334155;align=center;" value="Productionization Path&#xa;Extract modules into API services&#xa;Replace mocks with integrations&#xa;Move model access behind gateway" vertex="1">
+          <mxGeometry height="120" width="195" x="628" y="307.5" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-current-ui-modules" edge="1" parent="1" source="current-ui" style="endArrow=block;html=1;rounded=0;strokeColor=#14532D;strokeWidth=2;fontSize=12;fontColor=#14532D;" target="current-modules" value="calls local functions">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-modules-rag" edge="1" parent="1" source="current-modules" style="endArrow=block;html=1;rounded=0;strokeColor=#78350F;strokeWidth=2;" target="current-rag" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-modules-data" edge="1" parent="1" source="current-modules" style="endArrow=block;html=1;rounded=0;strokeColor=#78350F;strokeWidth=2;" target="current-data" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-current-to-bridge" edge="1" parent="1" source="current-modules" style="endArrow=block;html=1;rounded=0;strokeColor=#64748B;strokeWidth=2;" target="bridge" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-bridge-target-api" edge="1" parent="1" source="bridge" style="endArrow=block;html=1;rounded=0;strokeColor=#64748B;strokeWidth=2;" target="target-api" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-target-ui-api" edge="1" parent="1" source="target-ui" style="endArrow=block;html=1;rounded=0;strokeColor=#1E3A8A;strokeWidth=2;fontSize=12;fontColor=#1E3A8A;" target="target-api" value="HTTPS">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-target-api-ai" edge="1" parent="1" source="target-api" style="endArrow=block;html=1;rounded=0;strokeColor=#4C1D95;strokeWidth=2;" target="target-ai" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-target-api-enterprise" edge="1" parent="1" source="target-api" style="endArrow=block;html=1;rounded=0;strokeColor=#334155;strokeWidth=2;" target="target-enterprise" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-target-api-deploy" edge="1" parent="1" source="target-api" style="endArrow=block;html=1;rounded=0;strokeColor=#334155;strokeWidth=2;" target="target-deploy" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
