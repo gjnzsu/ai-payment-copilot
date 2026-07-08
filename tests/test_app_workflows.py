@@ -31,8 +31,9 @@ def test_app_scopes_selectors_and_rendered_content_to_each_workflow():
         "Use this workflow after a payment is rejected or failed."
     ]
     assert [subheader.value for subheader in draft_tab.subheader] == [
-        "DRAFT-001: pacs.008 Draft Pre-Validation",
-        "DRAFT-001: Rail Recommendation",
+        "DRAFT-001: Step 1 - Pre-validate pacs.008 Draft",
+        "DRAFT-001: Step 2 - Repair Recommendation",
+        "DRAFT-001: Step 3 - Scheme / Rail Recommendation",
     ]
     assert [subheader.value for subheader in exception_tab.subheader] == [
         "CASE-001: pacs.008 Rejected"
@@ -47,10 +48,11 @@ def test_app_switches_ready_draft_to_wire_without_changing_exception_workflow():
     ).run(timeout=30)
 
     assert [subheader.value for subheader in app.tabs[0].subheader] == [
-        "DRAFT-003: pacs.008 Draft Pre-Validation",
-        "DRAFT-003: Rail Recommendation",
+        "DRAFT-003: Step 1 - Pre-validate pacs.008 Draft",
+        "DRAFT-003: Step 2 - Repair Recommendation",
+        "DRAFT-003: Step 3 - Scheme / Rail Recommendation",
     ]
-    assert any("Wire Payment is recommended" in item.value for item in app.tabs[0].markdown)
+    assert any("is recommended" in item.value for item in app.tabs[0].markdown)
     assert [subheader.value for subheader in app.tabs[1].subheader] == [
         "CASE-001: pacs.008 Rejected"
     ]
@@ -70,6 +72,26 @@ def test_app_switches_exception_without_changing_draft_workflow():
         "Creditor agent BIC is invalid" in item.value for item in app.tabs[1].info
     )
     assert [subheader.value for subheader in app.tabs[0].subheader] == [
-        "DRAFT-001: pacs.008 Draft Pre-Validation",
-        "DRAFT-001: Rail Recommendation",
+        "DRAFT-001: Step 1 - Pre-validate pacs.008 Draft",
+        "DRAFT-001: Step 2 - Repair Recommendation",
+        "DRAFT-001: Step 3 - Scheme / Rail Recommendation",
     ]
+
+
+def test_app_mock_repair_unblocks_scheme_rail_recommendation():
+    app = _run_app()
+
+    draft_tab = app.tabs[0]
+    assert any(
+        "Resolve repair items before scheme / rail recommendation." in item.value
+        for item in draft_tab.warning
+    )
+
+    draft_tab.button[0].click().run(timeout=30)
+
+    assert any(
+        "Mock repair applied. This draft is ready for scheme / rail recommendation."
+        in item.value
+        for item in app.tabs[0].success
+    )
+    assert any("is recommended" in item.value for item in app.tabs[0].markdown)

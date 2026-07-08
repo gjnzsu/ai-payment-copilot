@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import os
+from dataclasses import replace
 
 import streamlit as st
 
-from payment_copilot.mock_data import list_cases, list_draft_payments
+from payment_copilot.mock_data import ACTIVE_CREDITOR_AGENT_BICS, list_cases, list_draft_payments
 from payment_copilot.models import PaymentCase
 from payment_copilot.prevalidation import prevalidate_payment
 from payment_copilot.rail_recommendation import recommend_payment_rails
@@ -31,11 +32,12 @@ def main() -> None:
         f"{case.case_id} - {case.message_type} - {case.creditor_name}": case
         for case in draft_cases
     }
+    st.session_state.setdefault("mock_repaired_drafts", {})
 
     st.title("AI Payment Copilot")
     st.caption(
-        "PoC workspace for pre-validating draft pacs.008 payments, recommending rails, "
-        "and investigating exceptions."
+        "PoC workspace for pre-validating draft pacs.008 payments, applying mock repairs, "
+        "recommending schemes / rails, and investigating exceptions."
     )
 
     with st.sidebar:
@@ -59,10 +61,13 @@ def main() -> None:
             options=list(draft_by_label.keys()),
             key="draft_payment_selector",
         )
-        selected_draft = draft_by_label[selected_draft_label]
-        _render_prevalidation(selected_draft)
+        selected_draft = _apply_mock_repair_state(draft_by_label[selected_draft_label])
+        validation_result = _render_prevalidation(selected_draft)
         st.divider()
-        _render_rail_recommendation(selected_draft)
+        repaired = _render_repair_step(selected_draft, validation_result)
+        st.divider()
+        selected_draft = _apply_mock_repair_state(selected_draft) if repaired else selected_draft
+        _render_scheme_rail_recommendation(selected_draft)
 
     with exception_workflow_tab:
         st.caption("Use this workflow after a payment is rejected or failed.")
@@ -88,10 +93,50 @@ def _payment_rows(case: PaymentCase) -> list[dict[str, str]]:
     ]
 
 
-def _render_prevalidation(case: PaymentCase) -> None:
+def _apply_mock_repair_state(case: PaymentCase) -> PaymentCase:
+    repaired_values = st.session_state["mock_repaired_drafts"].get(case.case_id)
+    if not repaired_values:
+        return case
+    return replace(case, **repaired_values)
+
+
+def _mock_repair_values(case: PaymentCase) -> dict[str, str]:
+    values: dict[str, str] = {
+        "status": "Draft - Mock Repaired",
+        "raw_exception": (
+            "Mock repair applied. Draft pacs.008 is ready for scheme / rail recommendation."
+        ),
+    }
+    if not case.creditor_account:
+        values["creditor_account"] = "MOCK-REPAIRED-CREDITOR-ACCOUNT"
+    if case.creditor_agent_bic not in ACTIVE_CREDITOR_AGENT_BICS:
+        values["creditor_agent_bic"] = ACTIVE_CREDITOR_AGENT_BICS[0]
+    return values
+
+
+def _render_workflow_progress(current_step: int) -> None:
+    labels = [
+        "1. Pre-validate",
+        "2. Repair",
+        "3. Recommend Scheme / Rail",
+        "4. Investigate Exception",
+    ]
+    cols = st.columns(len(labels))
+    for index, label in enumerate(labels, start=1):
+        with cols[index - 1]:
+            if index < current_step:
+                st.success(label)
+            elif index == current_step:
+                st.info(label)
+            else:
+                st.caption(label)
+
+
+def _render_prevalidation(case: PaymentCase):
     result = prevalidate_payment(case)
 
-    st.subheader(f"{case.case_id}: {case.message_type} Draft Pre-Validation")
+    _render_workflow_progress(1 if result.issues else 3)
+    st.subheader(f"{case.case_id}: Step 1 - Pre-validate {case.message_type} Draft")
     st.write(case.raw_exception)
 
     top_left, top_right = st.columns([2, 1])
@@ -117,7 +162,9 @@ def _render_prevalidation(case: PaymentCase) -> None:
                 st.write(issue.explanation)
                 st.success(issue.repair_suggestion)
     else:
-        st.success("No validation defects detected. This draft is ready for rail selection.")
+        st.success(
+            "No validation defects detected. This draft is ready for scheme / rail recommendation."
+        )
 
     st.markdown("### Supporting Rule Evidence")
     if result.evidence:
@@ -128,31 +175,56 @@ def _render_prevalidation(case: PaymentCase) -> None:
     else:
         st.caption("No repair rule evidence needed for a ready draft.")
 
+    return result
 
-def _render_rail_recommendation(case: PaymentCase) -> None:
+
+def _render_repair_step(case: PaymentCase, validation_result) -> bool:
+    st.subheader(f"{case.case_id}: Step 2 - Repair Recommendation")
+
+    if not validation_result.issues:
+        if case.case_id in st.session_state["mock_repaired_drafts"]:
+            st.success("Mock repair applied. This draft is ready for scheme / rail recommendation.")
+        else:
+            st.success("No repair action required. This draft can continue to recommendation.")
+        return False
+
+    st.warning("This is a UI prototype repair action. No payment data is submitted or mutated.")
+    for issue in validation_result.issues:
+        with st.container(border=True):
+            st.caption(f"{issue.code} - {issue.field_path}")
+            st.write(issue.repair_suggestion)
+
+    if st.button("Apply Suggested Repair", key=f"apply_repair_{case.case_id}"):
+        st.session_state["mock_repaired_drafts"][case.case_id] = _mock_repair_values(case)
+        st.success("Mock repair applied. This draft is ready for scheme / rail recommendation.")
+        return True
+    return False
+
+
+def _render_scheme_rail_recommendation(case: PaymentCase) -> None:
     result = recommend_payment_rails(case)
 
-    st.subheader(f"{case.case_id}: Rail Recommendation")
+    st.subheader(f"{case.case_id}: Step 3 - Scheme / Rail Recommendation")
     st.write(result.summary)
 
     if result.status == "Blocked":
-        st.warning("Resolve pre-validation repair items before selecting a payment rail.")
+        st.warning("Resolve repair items before scheme / rail recommendation.")
         return
 
     top = result.recommendations[0]
     top_left, top_right = st.columns([2, 1])
     with top_left:
-        st.markdown("### Recommended Rail")
+        st.markdown("### Recommended Scheme / Rail")
         st.success(f"{top.name}: {top.rationale}")
     with top_right:
         st.metric("Top Score", top.score)
         st.metric("Settlement", top.settlement_time)
 
-    st.markdown("### Rail Ranking")
+    st.markdown("### Scheme / Rail Ranking")
     st.dataframe(
         [
             {
-                "Rail": option.name,
+                "Scheme / Rail": option.name,
                 "Eligible": "Yes" if option.eligible else "No",
                 "Score": option.score,
                 "Fee": option.fee,
